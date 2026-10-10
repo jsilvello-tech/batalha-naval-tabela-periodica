@@ -1,0 +1,1090 @@
+/* ==========================================================================
+   BATALHA NAVAL DA TABELA PERIÓDICA - ESTILOS VISUAIS PARA PROJETOR ESCOLAR
+   Projetado para máxima legibilidade a 5-10 metros de distância
+   ========================================================================== */
+
+:root {
+  /* Paleta Padrão: Modo Sala Escura / Neon Sci-Fi */
+  --bg-main: #0b132b;
+  --bg-card: #1c2541;
+  --bg-card-hover: #263359;
+  --bg-cell-empty: rgba(255, 255, 255, 0.03);
+  --border-color: #3a506b;
+  --border-highlight: #48cae4;
+  --text-main: #f8f9fa;
+  --text-muted: #a0aec0;
+  --text-contrast: #ffffff;
+  
+  --accent-cyan: #48cae4;
+  --accent-gold: #ffd166;
+  --accent-green: #06d6a0;
+  --accent-red: #ef476f;
+  --accent-blue: #118ab2;
+
+  --hit-color: #e63946;
+  --hit-bg: rgba(230, 57, 70, 0.25);
+  --miss-color: #00b4d8;
+  --miss-bg: rgba(0, 180, 216, 0.2);
+  --ship-color: #2a9d8f;
+  --ship-border: #52b788;
+
+  --cell-size: 54px;
+  --font-base: 16px;
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Modo Sala Clara (Projetor Tradicional / Whiteboard High Contrast) */
+body.projector-light-mode {
+  --bg-main: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-hover: #e2e8f0;
+  --bg-cell-empty: #e2e8f0;
+  --border-color: #94a3b8;
+  --border-highlight: #0284c7;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-contrast: #0f172a;
+
+  --accent-cyan: #0284c7;
+  --accent-gold: #b45309;
+  --accent-green: #059669;
+  --accent-red: #dc2626;
+  --accent-blue: #1d4ed8;
+
+  --hit-color: #b91c1c;
+  --hit-bg: #fee2e2;
+  --miss-color: #0284c7;
+  --miss-bg: #e0f2fe;
+  --ship-color: #047857;
+  --ship-border: #065f46;
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  overflow-x: hidden;
+}
+
+/* ==================== BARRA SUPERIOR DO PROFESSOR ==================== */
+header.app-header {
+  background: var(--bg-card);
+  border-bottom: 3px solid var(--border-color);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  box-shadow: var(--shadow-card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-icon {
+  font-size: 2.2rem;
+  filter: drop-shadow(0 0 8px var(--accent-cyan));
+}
+
+.brand-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-main);
+}
+
+.brand-badge {
+  background: var(--accent-gold);
+  color: #000;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-control {
+  background: var(--bg-card-hover);
+  border: 1.5px solid var(--border-color);
+  color: var(--text-main);
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.btn-control:hover {
+  border-color: var(--accent-cyan);
+  background: var(--border-color);
+  transform: translateY(-1px);
+}
+
+.btn-control.active {
+  background: var(--accent-cyan);
+  color: #0b132b;
+  border-color: var(--accent-cyan);
+}
+
+/* ==================== PLACAR GIGANTE DO PROJETOR ==================== */
+.scoreboard-bar {
+  background: linear-gradient(90deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+  border-bottom: 2px solid var(--border-color);
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+body.projector-light-mode .scoreboard-bar {
+  background: linear-gradient(90deg, #e2e8f0, #cbd5e1);
+}
+
+.team-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 1rem;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 2px solid transparent;
+  transition: all 0.25s ease;
+}
+
+body.projector-light-mode .team-pill {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.team-pill.active-turn {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 16px rgba(72, 202, 228, 0.4);
+  transform: scale(1.04);
+}
+
+.team-badge-circle {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+}
+
+.team-p1-color { background-color: #3a86ff; }
+.team-p2-color { background-color: #e63946; }
+
+.team-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.team-status-details {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 0.75rem;
+}
+
+.team-status-details strong {
+  color: var(--text-main);
+}
+
+/* Banner de Turno */
+.turn-announcer {
+  text-align: center;
+  background: var(--bg-card);
+  padding: 0.5rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ==================== ÁREA PRINCIPAL ==================== */
+main.main-content {
+  flex: 1;
+  padding: 1rem;
+  max-width: 1800px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Telas (Visibilidade) */
+.view-screen {
+  display: none;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.view-screen.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==================== TELA INICIAL (MODOS) ==================== */
+.hero-container {
+  max-width: 1100px;
+  margin: 1.5rem auto;
+  text-align: center;
+}
+
+.hero-header h1 {
+  font-size: 2.8rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #48cae4, #06d6a0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+body.projector-light-mode .hero-header h1 {
+  background: linear-gradient(135deg, #0369a1, #047857);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.modes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.mode-card {
+  background: var(--bg-card);
+  border: 3px solid var(--border-color);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--shadow-card);
+}
+
+.mode-card:hover {
+  border-color: var(--accent-cyan);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(72, 202, 228, 0.25);
+}
+
+.mode-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.mode-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-main);
+}
+
+.mode-card p {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.btn-start-mode {
+  background: var(--accent-cyan);
+  color: #0b132b;
+  border: none;
+  padding: 0.85rem 1.5rem;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-start-mode:hover {
+  background: #90e0ef;
+  transform: scale(1.03);
+}
+
+/* ==================== ÁREA DO TABULEIRO / TABELA PERIÓDICA ==================== */
+.game-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media (max-width: 1200px) {
+  .game-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.board-container {
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+  overflow-x: auto;
+}
+
+.board-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.board-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.board-hint {
+  font-size: 0.95rem;
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+/* A Grade da Tabela Periódica */
+.periodic-table-wrapper {
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.periodic-table-grid {
+  display: grid;
+  grid-template-columns: 36px repeat(18, var(--cell-size));
+  grid-template-rows: 24px repeat(4, var(--cell-size));
+  gap: 4px;
+  user-select: none;
+  min-width: fit-content;
+}
+
+/* Tabela em modo 5 períodos caso expandido */
+.periodic-table-grid.periods-5 {
+  grid-template-rows: 24px repeat(5, var(--cell-size));
+}
+
+/* Cabeçalhos de Grupo e Período */
+.grid-header-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.grid-period-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+}
+
+/* Células de Espaço Vazio da Tabela */
+.table-empty-space {
+  background: var(--bg-cell-empty);
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.15);
+  font-size: 0.7rem;
+  pointer-events: none;
+}
+
+body.projector-light-mode .table-empty-space {
+  border-color: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.2);
+}
+
+/* Célula do Elemento Químico */
+.element-cell {
+  position: relative;
+  background: var(--bg-card-hover);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3px 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.element-cell:hover:not(.shot-hit):not(.shot-miss):not(.disabled) {
+  transform: translateY(-2px) scale(1.05);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 4px 12px rgba(72, 202, 228, 0.4);
+  z-index: 10;
+}
+
+.element-cell.disabled {
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+/* Topo do Elemento: Z e Massa */
+.cell-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.65rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.cell-z {
+  color: var(--accent-gold);
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+body.projector-light-mode .cell-z {
+  color: #92400e;
+}
+
+/* Símbolo Químico Central (Gigante para Projetor) */
+.cell-symbol {
+  font-size: 1.25rem;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+
+/* Nome do Elemento (Rodapé) */
+.cell-name {
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.85;
+  line-height: 1;
+}
+
+/* Cores das Famílias nas Bordas/Faixas */
+.element-cell[data-family="alcalinos"] { border-top: 4px solid #e63946; }
+.element-cell[data-family="alcalino_terrosos"] { border-top: 4px solid #f77f00; }
+.element-cell[data-family="transicao"] { border-top: 4px solid #4361ee; }
+.element-cell[data-family="boro"] { border-top: 4px solid #06d6a0; }
+.element-cell[data-family="carbono"] { border-top: 4px solid #028090; }
+.element-cell[data-family="nitrogenio"] { border-top: 4px solid #7209b7; }
+.element-cell[data-family="calcogenios"] { border-top: 4px solid #3a0ca3; }
+.element-cell[data-family="halogenios"] { border-top: 4px solid #d90429; }
+.element-cell[data-family="gases_nobres"] { border-top: 4px solid #118ab2; }
+.element-cell[data-family="hidrogenio"] { border-top: 4px solid #2a9d8f; }
+
+/* Estados de Jogo na Célula */
+
+/* 1. Navio Próprio Posicionado (Verde / Âncora) */
+.element-cell.has-my-ship {
+  background: var(--ship-color);
+  border-color: var(--ship-border);
+  color: #ffffff;
+}
+
+.element-cell.has-my-ship::after {
+  content: "⚓";
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 0.75rem;
+}
+
+/* 2. Disparo: FOGO (Acerto) */
+.element-cell.shot-hit {
+  background: var(--hit-color) !important;
+  color: #ffffff !important;
+  border-color: #ff0055 !important;
+  animation: hitExplosion 0.4s ease-out;
+}
+
+.element-cell.shot-hit::before {
+  content: "🔥";
+  position: absolute;
+  font-size: 1.5rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 6px rgba(0,0,0,0.8));
+  z-index: 5;
+}
+
+@keyframes hitExplosion {
+  0% { transform: scale(0.7); opacity: 0.5; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* 3. Disparo: ÁGUA (Erro) */
+.element-cell.shot-miss {
+  background: var(--miss-bg) !important;
+  color: var(--text-muted) !important;
+  border-color: var(--miss-color) !important;
+}
+
+.element-cell.shot-miss::before {
+  content: "🌊";
+  position: absolute;
+  font-size: 1.25rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.75;
+}
+
+/* 4. Navio Afundado / Destruído por Completo */
+.element-cell.ship-sunk {
+  box-shadow: 0 0 16px rgba(230, 57, 70, 0.8) !important;
+  border: 2px dashed #ffff00 !important;
+}
+
+/* Preview de Posicionamento */
+.element-cell.preview-valid {
+  background: rgba(6, 214, 160, 0.45) !important;
+  border-color: #06d6a0 !important;
+}
+
+.element-cell.preview-invalid {
+  background: rgba(239, 71, 111, 0.45) !important;
+  border-color: #ef476f !important;
+}
+
+/* ==================== PAINEL LATERAL DE INFORMAÇÕES ==================== */
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.side-card {
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1.15rem;
+  box-shadow: var(--shadow-card);
+}
+
+.side-card-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--accent-cyan);
+}
+
+/* Mini Tabuleiro da Frota Própria (Durante a batalha contra IA) */
+.mini-board-wrapper {
+  margin-top: 0.5rem;
+}
+
+.mini-fleet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mini-ship-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  background: var(--bg-card-hover);
+  font-size: 0.85rem;
+}
+
+.mini-ship-item.sunk {
+  opacity: 0.5;
+  text-decoration: line-through;
+  background: rgba(230, 57, 70, 0.15);
+}
+
+.ship-pips {
+  display: flex;
+  gap: 3px;
+}
+
+.ship-pip {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--ship-color);
+}
+
+.ship-pip.hit {
+  background: var(--hit-color);
+}
+
+/* Card Didático do Elemento Revelado */
+.element-didactic-card {
+  border-top: 4px solid var(--accent-cyan);
+}
+
+.element-didactic-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.element-didactic-symbol {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: var(--bg-card-hover);
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--accent-cyan);
+}
+
+.element-didactic-title h3 {
+  font-size: 1.2rem;
+  line-height: 1.1;
+}
+
+.element-didactic-title span {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.didactic-specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  background: var(--bg-card-hover);
+  padding: 0.6rem;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+
+.didactic-curiosity {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--text-main);
+  background: rgba(72, 202, 228, 0.1);
+  padding: 0.6rem;
+  border-radius: 8px;
+  border-left: 3px solid var(--accent-cyan);
+}
+
+/* Sonda de Nêutrons (Radar) */
+.btn-radar {
+  width: 100%;
+  background: linear-gradient(135deg, #7209b7, #4361ee);
+  color: #fff;
+  border: none;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(114, 9, 183, 0.35);
+}
+
+.btn-radar:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.15);
+}
+
+.btn-radar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==================== TELA DE SETUP (POSICIONAMENTO) ==================== */
+.setup-controls-bar {
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.ships-selector {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.ship-select-btn {
+  background: var(--bg-card-hover);
+  border: 2px solid var(--border-color);
+  color: var(--text-main);
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.15s ease;
+}
+
+.ship-select-btn.selected {
+  border-color: var(--accent-green);
+  background: rgba(6, 214, 160, 0.2);
+}
+
+.ship-select-btn.placed {
+  border-color: var(--ship-border);
+  opacity: 0.7;
+}
+
+.orientation-toggle {
+  display: flex;
+  gap: 0.25rem;
+  background: var(--bg-card-hover);
+  padding: 0.25rem;
+  border-radius: 8px;
+}
+
+.btn-orient {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-orient.active {
+  background: var(--accent-cyan);
+  color: #0b132b;
+}
+
+.setup-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-primary-action {
+  background: var(--accent-green);
+  color: #0b132b;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-primary-action:hover:not(:disabled) {
+  background: #20f6c2;
+  transform: translateY(-2px);
+}
+
+.btn-primary-action:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ==================== MODAIS E TELAS CHEIAS ==================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  padding: 1.5rem;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-box {
+  background: var(--bg-card);
+  border: 3px solid var(--accent-cyan);
+  border-radius: 18px;
+  padding: 2rem;
+  max-width: 650px;
+  width: 100%;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  animation: modalScale 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalScale {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+}
+
+.btn-close-modal {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Quiz Modal */
+.quiz-question-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  line-height: 1.4;
+}
+
+.quiz-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.quiz-option-btn {
+  background: var(--bg-card-hover);
+  border: 2px solid var(--border-color);
+  color: var(--text-main);
+  padding: 0.85rem 1.25rem;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quiz-option-btn:hover:not(:disabled) {
+  border-color: var(--accent-cyan);
+  background: var(--border-color);
+}
+
+.quiz-option-btn.correct {
+  background: rgba(6, 214, 160, 0.3) !important;
+  border-color: #06d6a0 !important;
+  color: #fff !important;
+}
+
+.quiz-option-btn.wrong {
+  background: rgba(239, 71, 111, 0.3) !important;
+  border-color: #ef476f !important;
+  color: #fff !important;
+}
+
+.quiz-feedback-box {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+  display: none;
+}
+
+/* Cortina de Privacidade para Projetor */
+.curtain-screen {
+  text-align: center;
+  max-width: 750px;
+  margin: 3rem auto;
+  padding: 3rem 2rem;
+  background: var(--bg-card);
+  border: 4px dashed var(--accent-gold);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.curtain-icon {
+  font-size: 5rem;
+  margin-bottom: 1.5rem;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.curtain-screen h2 {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  color: var(--accent-gold);
+}
+
+.curtain-screen p {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.btn-reveal-turn {
+  background: var(--accent-gold);
+  color: #000;
+  border: none;
+  padding: 1.1rem 2.5rem;
+  border-radius: 14px;
+  font-size: 1.35rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.btn-reveal-turn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(255, 209, 102, 0.4);
+}
+
+/* Legenda das Famílias Químicas */
+.families-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  background: var(--bg-card);
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.legend-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.55rem;
+  border-radius: 6px;
+  background: var(--bg-card-hover);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.legend-color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* Utilitários de Zoom da Tabela */
+.zoom-level-1 { --cell-size: 46px; }
+.zoom-level-2 { --cell-size: 54px; }
+.zoom-level-3 { --cell-size: 64px; }
+.zoom-level-4 { --cell-size: 74px; }
+
+/* Mensagem Flutuante de Notificação (Toast) */
+.toast-notification {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--accent-cyan);
+  color: #0b132b;
+  padding: 0.85rem 1.75rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+}
+
+.toast-notification.show {
+  transform: translateX(-50%) translateY(0);
+}

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Batalha Naval da Tabela Periódica - 9º Ano</title>
+  <meta name="description" content="Jogo educativo de Batalha Naval baseado na Tabela Periódica para turmas do 9º ano. Alinhado à BNCC, projetado especialmente para uso em projetores de sala de aula.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="zoom-level-2">
+
+  <!-- ==================== CABEÇALHO DO PROFESSOR ==================== -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-icon">⚛️</div>
+      <div>
+        <h1 class="brand-title">Batalha Naval da Tabela Periódica</h1>
+        <span class="brand-badge">9º Ano • Ciências & Química • BNCC</span>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <button id="btnToggleTheme" class="btn-control" title="Alternar entre modo sala escura e projetor em sala clara">
+        <span id="themeIcon">☀️</span> <span id="themeLabel">Modo Sala Clara</span>
+      </button>
+
+      <div style="display: flex; gap: 2px;">
+        <button id="btnZoomOut" class="btn-control" title="Diminuir tamanho da tabela">A-</button>
+        <button id="btnZoomReset" class="btn-control" title="Tamanho padrão">100%</button>
+        <button id="btnZoomIn" class="btn-control" title="Aumentar tamanho da tabela para o fundo da sala">A+</button>
+      </div>
+
+      <button id="btnFullscreen" class="btn-control" title="Tela cheia no projetor">
+        <span>🖥️</span> <span>Tela Cheia</span>
+      </button>
+
+      <button id="btnToggleSound" class="btn-control" title="Ligar/Desligar efeitos sonoros">
+        <span id="soundIcon">🔊</span> <span id="soundLabel">Som</span>
+      </button>
+
+      <button id="btnRules" class="btn-control" title="Como jogar e habilidades BNCC">
+        <span>📖</span> <span>Regras & BNCC</span>
+      </button>
+
+      <button id="btnHome" class="btn-control" title="Voltar ao início">
+        <span>🏠</span> <span>Início</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== PLACAR GIGANTE DO PROJETOR ==================== -->
+  <div id="scoreboardBar" class="scoreboard-bar" style="display: none;">
+    <div id="teamP1Pill" class="team-pill active-turn">
+      <div class="team-badge-circle team-p1-color"></div>
+      <div>
+        <div id="teamP1Name" class="team-name">Equipe Prótons</div>
+        <div class="team-status-details">
+          <span>Navios: <strong id="teamP1Ships">5/5</strong></span>
+          <span>Acertos: <strong id="teamP1Hits">0</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="turnAnnouncer" class="turn-announcer">
+      <span>⚡</span> <span id="turnText">Vez da Equipe Prótons - Escolha o elemento inimigo!</span>
+    </div>
+
+    <div id="teamP2Pill" class="team-pill">
+      <div class="team-badge-circle team-p2-color"></div>
+      <div>
+        <div id="teamP2Name" class="team-name">Prof. Mendeleev (IA)</div>
+        <div class="team-status-details">
+          <span>Navios: <strong id="teamP2Ships">5/5</strong></span>
+          <span>Acertos: <strong id="teamP2Hits">0</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CONTEÚDO PRINCIPAL ==================== -->
+  <main class="main-content">
+
+    <!-- 1. TELA INICIAL / SELEÇÃO DE MODO -->
+    <section id="viewHome" class="view-screen active">
+      <div class="hero-container">
+        <div class="hero-header">
+          <h1>Batalha Naval Atômica</h1>
+          <p class="hero-subtitle">
+            Descubra os elementos químicos secretos da frota adversária navegando pelos <strong>Períodos</strong> e <strong>Famílias</strong> da Tabela Periódica!
+            Projetado especialmente para dinamizar a aula de Ciências do 9º ano.
+          </p>
+        </div>
+
+        <div class="modes-grid">
+          <!-- Modo 1: Cooperativo contra a IA -->
+          <div class="mode-card" id="cardModeAi">
+            <div>
+              <div class="mode-icon">🤖</div>
+              <h2>Turma vs. Prof. Mendeleev</h2>
+              <p>A sala de aula inteira joga em equipe contra a inteligência artificial do Professor Mendeleev no telão. Ideal para mediação do professor e debates em grupo!</p>
+            </div>
+            <button class="btn-start-mode" onclick="window.app.startMode('VS_AI')">Jogar Contra IA</button>
+          </div>
+
+          <!-- Modo 2: Passa e Joga com Cortina -->
+          <div class="mode-card" id="cardMode2P">
+            <div>
+              <div class="mode-icon">👥</div>
+              <h2>Equipe Prótons vs. Equipe Elétrons</h2>
+              <p>Divida a turma em duas equipes! O jogo conta com <strong>Cortina de Privacidade</strong> para ocultar as jogadas no projetor na passagem de vez.</p>
+            </div>
+            <button class="btn-start-mode" onclick="window.app.startMode('PASS_AND_PLAY')">Batalha de Equipes</button>
+          </div>
+
+          <!-- Modo 3: Explorador Livre -->
+          <div class="mode-card" id="cardModeExplorer">
+            <div>
+              <div class="mode-icon">🔬</div>
+              <h2>Laboratório da Tabela</h2>
+              <p>Modo livre de exploração didática. Clique nos elementos para projetar na parede suas propriedades atômicas, famílias e aplicações práticas cotidianas.</p>
+            </div>
+            <button class="btn-start-mode" onclick="window.app.startMode('EXPLORER')">Explorar Tabela</button>
+          </div>
+        </div>
+
+        <div class="families-legend">
+          <strong style="margin-right: 0.5rem; align-self: center;">Famílias Químicas:</strong>
+          <span class="legend-chip"><span class="legend-color-dot" style="background:#e63946;"></span> Metais Alcalinos (1)</span>
+          <span class="legend-chip"><span class="legend-color-dot" style="background:#f77f00;"></span> Alcalino-Terrosos (2)</span>
+          <span class="legend-chip"><span class="legend-color-dot" style="background:#4361ee;"></span> Metais de Transição (3-12)</span>
+          <span class="legend-chip"><span class="legend-color-dot" style="background:#06d6a0;"></span> Família do Boro (13)</span>
+          <span class="legend-chip"><span class="legend-color-dot" style="background:#028090;"></span> Família do Carbono (14)</span>
+          <span class="legend-chip"><span class="legend-color-dot" style="background:#7209b7;"></span> Família do Nitrogênio (15)</span>
+          <span class="legend-chip"><span class="legend-color-dot" style="background:#3a0ca3;"></span> Calcogênios (16)</span>
+          <span class="legend-chip"><span class="legend-color-dot" style="background:#d90429;"></span> Halogênios (17)</span>
+          <span class="legend-chip"><span class="legend-color-dot" style="background:#118ab2;"></span> Gases Nobres (18)</span>
+          <span class="legend-chip"><span class="legend-color-dot" style="background:#2a9d8f;"></span> Hidrogênio</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. TELA DE SETUP (POSICIONAMENTO DE FROTA) -->
+    <section id="viewSetup" class="view-screen">
+      <div class="setup-controls-bar">
+        <div>
+          <h2 id="setupPlayerTitle" style="font-size: 1.3rem; margin-bottom: 0.25rem;">Posicione sua Frota Atômica: Equipe Prótons</h2>
+          <p id="setupPlayerInstructions" style="color: var(--text-muted); font-size: 0.9rem;">
+            Selecione a embarcação química e clique na tabela periódica para ancorá-la. Espaços vazios da tabela não são navegáveis!
+          </p>
+        </div>
+
+        <div class="setup-actions">
+          <button id="btnAutoPlace" class="btn-control" style="background: var(--bg-card-hover); border-color: var(--accent-gold); color: var(--accent-gold);">
+            🎲 Posicionamento Automático
+          </button>
+          <button id="btnConfirmFleet" class="btn-primary-action" disabled>
+            ✅ Confirmar Frota
+          </button>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;">
+        <span style="font-weight: 800; font-size: 0.95rem;">Embarcações Químicas:</span>
+        <div id="shipsSelectorList" class="ships-selector"></div>
+
+        <div class="orientation-toggle" style="margin-left: auto;">
+          <span style="font-size: 0.85rem; align-self: center; margin-right: 0.35rem; color: var(--text-muted);">Orientação:</span>
+          <button id="btnOrientH" class="btn-orient active">Horizontal (Período ➡️)</button>
+          <button id="btnOrientV" class="btn-orient">Vertical (Família ⬇️)</button>
+        </div>
+      </div>
+
+      <div class="board-container">
+        <div class="periodic-table-wrapper">
+          <div id="setupGrid" class="periodic-table-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. TELA DA CORTINA DE PRIVACIDADE (MODO 2 EQUIPES NO PROJETOR) -->
+    <section id="viewCurtain" class="view-screen">
+      <div class="curtain-screen">
+        <div class="curtain-icon">🤫</div>
+        <h2 id="curtainHeading">Cortina do Projetor: Troca de Turno</h2>
+        <p id="curtainMessage">
+          Atenção turma! É hora de alternar as equipes. Ninguém olhe para a tela até que a outra equipe assuma o controle!
+        </p>
+        <button id="btnRevealTurn" class="btn-reveal-turn">
+          👀 Estamos Prontos! Revelar Tabuleiro
+        </button>
+      </div>
+    </section>
+
+    <!-- 4. TELA DA BATALHA NAVAL ATÔMICA -->
+    <section id="viewBattle" class="view-screen">
+      <div class="game-layout">
+        
+        <!-- Coluna Esquerda: Tabuleiro Principal de Ataque (Tabela Periódica Inimiga) -->
+        <div class="board-container">
+          <div class="board-header">
+            <div class="board-title">
+              <span>🎯</span>
+              <span id="battleBoardTitle">Tabela Periódica Inimiga (Selecione onde Disparar)</span>
+            </div>
+            <div class="board-tabs" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button id="btnTabAttack" class="btn-control active">🎯 Radar de Ataque (Oponente)</button>
+              <button id="btnTabDefense" class="btn-control">🛡️ Frota Própria (Nossos Elementos)</button>
+            </div>
+            <div class="board-hint" id="battleBoardHint">
+              Clique em um elemento para lançar o disparo atômico!
+            </div>
+          </div>
+
+          <div class="periodic-table-wrapper">
+            <div id="battleGrid" class="periodic-table-grid"></div>
+          </div>
+
+          <div class="families-legend" style="margin-top: 1rem;">
+            <span style="font-weight: 800; font-size: 0.8rem; align-self: center;">Status:</span>
+            <span class="legend-chip"><span style="font-size: 1rem;">🔥</span> Fogo (Elemento Inimigo Atingido)</span>
+            <span class="legend-chip"><span style="font-size: 1rem;">🌊</span> Água (Elemento Vazio)</span>
+            <span class="legend-chip" style="margin-left: auto; color: var(--accent-gold); font-size: 0.8rem;">
+              💡 Dica do 9º Ano: Elementos da mesma coluna têm a mesma família química!
+            </span>
+          </div>
+        </div>
+
+        <!-- Coluna Direita: Painel Didático, Sonda de Nêutrons e Frota -->
+        <div class="side-panel">
+          
+          <!-- Botão Sonda de Nêutrons (Radar da Turma) -->
+          <div class="side-card">
+            <button id="btnActivateRadar" class="btn-radar">
+              <span>📡</span> <span>Sonda de Nêutrons (Radar)</span>
+            </button>
+            <div id="radarStatusText" style="text-align: center; margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+              Acerte uma pergunta de química para revelar posições inimigas!
+            </div>
+          </div>
+
+          <!-- Ficha Didática do Elemento Atacado -->
+          <div class="side-card element-didactic-card" id="didacticCard">
+            <div class="side-card-title">
+              <span>🔬</span> <span>Último Elemento Analisado</span>
+            </div>
+            <div id="didacticCardContent">
+              <div style="text-align: center; color: var(--text-muted); padding: 1.5rem 0;">
+                Faça o primeiro disparo para analisar o elemento químico!
+              </div>
+            </div>
+          </div>
+
+          <!-- Mini Frota / Defesa Própria -->
+          <div class="side-card">
+            <div class="side-card-title">
+              <span>🛡️</span> <span id="myFleetTitle">Estado da Sua Frota</span>
+            </div>
+            <div id="myFleetList" class="mini-fleet-list"></div>
+          </div>
+
+          <!-- Log de Ações -->
+          <div class="side-card" style="max-height: 180px; overflow-y: auto;">
+            <div class="side-card-title" style="font-size: 0.95rem;">
+              <span>📜</span> <span>Histórico de Disparos</span>
+            </div>
+            <div id="battleLog" style="font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.35rem;">
+              <div>Batalha iniciada. Que a ciência vença!</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. TELA DO EXPLORADOR DA TABELA (MODO LABORATÓRIO LIVRE) -->
+    <section id="viewExplorer" class="view-screen">
+      <div class="board-container">
+        <div class="board-header">
+          <div class="board-title">
+            <span>🔬</span> <span>Laboratório Interativo da Tabela Periódica (Períodos 1 a 4)</span>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Clique em qualquer elemento para projetar sua ficha didática completa com número de prótons, elétrons de valência e usos práticos.
+          </p>
+        </div>
+
+        <div class="periodic-table-wrapper">
+          <div id="explorerGrid" class="periodic-table-grid"></div>
+        </div>
+
+        <div id="explorerDetailCard" style="margin-top: 1.5rem; background: var(--bg-card-hover); border: 2px solid var(--accent-cyan); border-radius: 12px; padding: 1.5rem;">
+          <h3 style="color: var(--accent-cyan); margin-bottom: 0.5rem;">Selecione um elemento acima</h3>
+          <p style="color: var(--text-muted);">Clique em qualquer quadrado para ver a análise detalhada.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== MODAL DE QUIZ (SONDA DE NÊUTRONS) ==================== -->
+  <div id="quizModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">📡 Sonda de Nêutrons: Desafio de Química</div>
+        <button class="btn-close-modal" onclick="window.app.closeQuizModal()">✕</button>
+      </div>
+
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+        Responda corretamente para calibrar o espectrômetro e receber uma dica estratégica sobre a localização dos navios adversários!
+      </p>
+
+      <div id="quizQuestionText" class="quiz-question-text">Pergunta...</div>
+      <div id="quizOptionsList" class="quiz-options-list"></div>
+      
+      <div id="quizFeedbackBox" class="quiz-feedback-box"></div>
+
+      <div style="display: flex; justify-content: flex-end;">
+        <button id="btnQuizContinue" class="btn-primary-action" style="display: none;" onclick="window.app.onQuizContinue()">
+          Continuar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL DE FIM DE JOGO / VITÓRIA ==================== -->
+  <div id="victoryModal" class="modal-overlay">
+    <div class="modal-box" style="text-align: center;">
+      <div style="font-size: 4rem; margin-bottom: 0.5rem;" id="victoryIcon">🏆</div>
+      <h2 id="victoryTitle" style="font-size: 2.2rem; color: var(--accent-gold); margin-bottom: 0.75rem;">Vitória da Equipe!</h2>
+      <p id="victoryMessage" style="font-size: 1.15rem; color: var(--text-main); margin-bottom: 1.5rem;">
+        Todas as embarcações químicas inimigas foram desvendadas!
+      </p>
+
+      <div id="victoryStats" style="background: var(--bg-card-hover); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;">
+        <div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Total de Disparos</div>
+          <div id="statTotalShots" style="font-size: 1.5rem; font-weight: 800;">0</div>
+        </div>
+        <div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Acertos (Fogo)</div>
+          <div id="statTotalHits" style="font-size: 1.5rem; font-weight: 800; color: var(--accent-green);">0</div>
+        </div>
+        <div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Precisão</div>
+          <div id="statAccuracy" style="font-size: 1.5rem; font-weight: 800; color: var(--accent-cyan);">0%</div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 1rem;">
+        <button class="btn-primary-action" onclick="window.app.restartCurrentGame()">
+          🔄 Jogar Novamente
+        </button>
+        <button class="btn-control" onclick="window.app.goToHome()">
+          🏠 Menu Principal
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL DE REGRAS E BNCC ==================== -->
+  <div id="rulesModal" class="modal-overlay">
+    <div class="modal-box" style="max-height: 85vh; overflow-y: auto;">
+      <div class="modal-header">
+        <div class="modal-title">📖 Regras & Habilidades da BNCC</div>
+        <button class="btn-close-modal" onclick="window.app.closeRulesModal()">✕</button>
+      </div>
+
+      <div style="line-height: 1.6; font-size: 0.95rem; color: var(--text-main);">
+        <h4 style="color: var(--accent-cyan); margin-top: 0.75rem; font-size: 1.1rem;">🎯 Como Jogar a Batalha Naval da Tabela Periódica:</h4>
+        <ul style="margin-left: 1.25rem; margin-top: 0.5rem;">
+          <li>O tabuleiro do jogo é a <strong>Tabela Periódica Simplificada</strong> (Períodos 1 a 4, cobrindo os elementos $Z=1$ a $Z=36$).</li>
+          <li>Cada jogador posiciona sua esquadra de 5 embarcações químicas:
+            <ul>
+              <li><strong>Porta-Aviões de Valência</strong> (4 elementos contíguos)</li>
+              <li><strong>Encouraçado Molecular</strong> (3 elementos contíguos)</li>
+              <li><strong>Cruzador Iônico Alfa</strong> (2 elementos contíguos)</li>
+              <li><strong>Cruzador Covalente Beta</strong> (2 elementos contíguos)</li>
+              <li><strong>Submarino Nuclear</strong> (1 elemento isolado)</li>
+            </ul>
+          </li>
+          <li>Os navios só podem ser posicionados sobre elementos químicos reais! Espaços vazios da tabela são oceano aberto e não recebem embarcações.</li>
+          <li>Posicionar na horizontal explora os <strong>Períodos</strong>; na vertical explora as <strong>Famílias / Grupos</strong> químicos.</li>
+          <li>A cada disparo:
+            <ul>
+              <li>🔥 <strong>FOGO:</strong> Um elemento com embarcação foi atingido!</li>
+              <li>🌊 <strong>ÁGUA:</strong> O elemento estava vazio, mas você ganha a ficha pedagógica dele para estudar!</li>
+            </ul>
+          </li>
+          <li>Vence quem afundar todos os 5 navios adversários primeiro!</li>
+        </ul>
+
+        <h4 style="color: var(--accent-green); margin-top: 1.25rem; font-size: 1.1rem;">🎓 Alinhamento com a BNCC (9º Ano do Ensino Fundamental):</h4>
+        <ul style="margin-left: 1.25rem; margin-top: 0.5rem;">
+          <li><strong>EF09CI01:</strong> Investigar as mudanças de estado físico da matéria e a constituição atômica (prótons, elétrons, nêutrons).</li>
+          <li><strong>EF09CI02:</strong> Comparar quantidades de reagentes e produtos em transformações químicas e compreender a tabela periódica.</li>
+          <li><strong>EF09CI03:</strong> Identificar modelos que descrevem a estrutura atômica e reconhecer as propriedades periódicas dos elementos (famílias, períodos, metais, ametais e gases nobres).</li>
+        </ul>
+
+        <h4 style="color: var(--accent-gold); margin-top: 1.25rem; font-size: 1.1rem;">📽️ Recursos Especiais para Projetor:</h4>
+        <ul style="margin-left: 1.25rem; margin-top: 0.5rem;">
+          <li><strong>Modo Sala Clara / Escura:</strong> Contraste sob medida para salas com lâmpadas acesas ou cortinas fechadas.</li>
+          <li><strong>Zoom da Tabela (A- / A+):</strong> Aumente o tamanho para que alunos no fundo da sala enxerguem com clareza.</li>
+          <li><strong>Cortina de Privacidade:</strong> Oculta a tela durante a troca de equipes para evitar que os adversários espiem o tabuleiro.</li>
+        </ul>
+      </div>
+
+      <div style="margin-top: 1.5rem; text-align: right;">
+        <button class="btn-primary-action" onclick="window.app.closeRulesModal()">Entendi, Vamos Jogar!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notificação Flutuante (Toast) -->
+  <div id="toastNotification" class="toast-notification">Notificação</div>
+
+  <!-- Scripts do Jogo -->
+  <script src="js/elements_data.js"></script>
+  <script src="js/quiz_data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/game_state.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>

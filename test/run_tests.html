@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Batalha Naval - Test Runner</title>
+</head>
+<body>
+  <h1>Executando Testes Automatizados...</h1>
+  <div id="output" style="font-family: monospace; white-space: pre;"></div>
+
+  <script src="../js/elements_data.js"></script>
+  <script src="../js/quiz_data.js"></script>
+  <script src="../js/audio.js"></script>
+  <script src="../js/game_state.js"></script>
+  <script src="./verify.js"></script>
+  <script>
+    try {
+      runTests();
+      document.getElementById('output').textContent = "TODOS OS TESTES PASSARAM COM SUCESSO!";
+      console.log("TEST_SUCCESS");
+    } catch (err) {
+      document.getElementById('output').textContent = "ERRO: " + err.message;
+      console.error("TEST_ERROR", err);
+    }
+  </script>
+</body>
+</html>

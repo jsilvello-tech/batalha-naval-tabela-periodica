@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Browser Integration Test</title>
+</head>
+<body>
+  <div id="test-results" style="font-family: monospace; font-size: 14px; white-space: pre;">Iniciando testes no navegador...</div>
+  
+  <iframe id="appFrame" src="../index.html" style="width: 1200px; height: 800px; border: 1px solid #ccc;"></iframe>
+
+  <script>
+    const log = (msg) => {
+      console.log(msg);
+      document.getElementById('test-results').textContent += '\n' + msg;
+    };
+
+    const frame = document.getElementById('appFrame');
+    frame.onload = () => {
+      try {
+        const doc = frame.contentDocument || frame.contentWindow.document;
+        const win = frame.contentWindow;
+
+        log("1. Iframe carregado com sucesso.");
+        
+        // Verificar elementos da UI
+        if (!win.app) throw new Error("Objeto window.app não encontrado!");
+        log("2. window.app inicializado com sucesso.");
+
+        // Testar alternância de tema
+        const btnToggleTheme = doc.getElementById('btnToggleTheme');
+        btnToggleTheme.click();
+        if (!doc.body.classList.contains('projector-light-mode')) {
+          throw new Error("Falha ao ativar modo sala clara!");
+        }
+        log("3. Modo Sala Clara ativado com sucesso.");
+        btnToggleTheme.click(); // voltar
+
+        // Testar Zoom
+        const btnZoomIn = doc.getElementById('btnZoomIn');
+        btnZoomIn.click();
+        if (!doc.body.classList.contains('zoom-level-3')) {
+          throw new Error("Falha no zoom in!");
+        }
+        log("4. Controle de Zoom funcionando.");
+
+        // Iniciar modo VS_AI
+        win.app.startMode('VS_AI');
+        const setupView = doc.getElementById('viewSetup');
+        if (!setupView.classList.contains('active')) {
+          throw new Error("Tela de setup não está ativa após startMode('VS_AI')!");
+        }
+        log("5. Transição para Tela de Setup bem-sucedida.");
+
+        // Testar posicionamento automático
+        const btnAuto = doc.getElementById('btnAutoPlace');
+        btnAuto.click();
+        if (!win.app.game.isFleetComplete(win.app.game.player1)) {
+          throw new Error("Auto posicionamento não completou a frota do jogador 1!");
+        }
+        log("6. Auto posicionamento posicionou todos os 5 navios.");
+
+        // Confirmar frota
+        const btnConfirm = doc.getElementById('btnConfirmFleet');
+        btnConfirm.click();
+        const battleView = doc.getElementById('viewBattle');
+        if (!battleView.classList.contains('active')) {
+          throw new Error("Tela de Batalha não está ativa após confirmar frota!");
+        }
+        log("7. Batalha iniciada com sucesso.");
+
+        // Verificar células da tabela de batalha
+        const battleCells = doc.querySelectorAll('#battleGrid .element-cell');
+        if (battleCells.length < 36) {
+          throw new Error(`Menos de 36 células de elementos renderizadas! Encontradas: ${battleCells.length}`);
+        }
+        log(`8. Grid de batalha renderizou ${battleCells.length} elementos químicos reais.`);
+
+        // Testar disparo
+        const firstCell = battleCells[0];
+        firstCell.click();
+        log("9. Disparo realizado na primeira célula.");
+
+        // Testar alternância para aba de Frota Própria (Defesa)
+        const btnTabDefense = doc.getElementById('btnTabDefense');
+        const btnTabAttack = doc.getElementById('btnTabAttack');
+        if (btnTabDefense && btnTabAttack) {
+          btnTabDefense.click();
+          if (!doc.getElementById('battleBoardTitle').textContent.includes('Defesa')) {
+            throw new Error("Falha ao alternar para aba de Frota Própria!");
+          }
+          log("9.1 Aba de Defesa ativada com sucesso.");
+          btnTabAttack.click();
+          if (!doc.getElementById('battleBoardTitle').textContent.includes('Inimiga')) {
+            throw new Error("Falha ao alternar de volta para aba de Ataque!");
+          }
+          log("9.2 Aba de Ataque restaurada.");
+        }
+
+        // Verificar atualização do card didático
+        const didacticContent = doc.getElementById('didacticCardContent');
+        if (!didacticContent.textContent.includes('Hidrogênio') && !didacticContent.textContent.includes('Z =')) {
+          throw new Error("Card didático não atualizou com informações do elemento!");
+        }
+        log("10. Ficha didática exibida com sucesso.");
+
+        // Testar abertura de Quiz
+        const btnRadar = doc.getElementById('btnActivateRadar');
+        btnRadar.click();
+        const quizModal = doc.getElementById('quizModal');
+        if (!quizModal.classList.contains('active')) {
+          throw new Error("Modal de quiz não abriu!");
+        }
+        log("11. Modal de Sonda de Nêutrons (Quiz do 9º ano) aberto.");
+
+        // Responder primeira opção
+        const firstOpt = doc.querySelector('.quiz-option-btn');
+        if (!firstOpt) throw new Error("Opções de quiz não renderizadas!");
+        firstOpt.click();
+        log("12. Resposta do quiz processada.");
+
+        const btnCont = doc.getElementById('btnQuizContinue');
+        btnCont.click();
+        if (quizModal.classList.contains('active')) {
+          throw new Error("Modal de quiz não fechou após continuar!");
+        }
+        log("13. Modal de quiz fechado com sucesso.");
+
+        // Testar modo explorador
+        win.app.startMode('EXPLORER');
+        const explorerView = doc.getElementById('viewExplorer');
+        if (!explorerView.classList.contains('active')) {
+          throw new Error("Modo explorador não ativou!");
+        }
+        log("14. Modo Laboratório da Tabela funcionando.");
+
+        log("\n=== TESTES DE INTEGRAÇÃO NO NAVEGADOR: 100% APROVADOS! ===");
+        document.getElementById('test-results').textContent += '\n\nINTEGRATION_TESTS_PASSED';
+      } catch (e) {
+        log("ERRO NO TESTE: " + e.message);
+        document.getElementById('test-results').textContent += '\n\nINTEGRATION_TESTS_FAILED: ' + e.message;
+      }
+    };
+  </script>
+</body>
+</html>
